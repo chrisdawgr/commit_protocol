@@ -62,7 +62,6 @@ coordinator(Cohorts, Decided, Ack, Ref) ->
 % Cohort server
 cohort(State,Action,C,C_ref) ->
   receive
-    %TODO ref instead
     {_,{ok,Coord}} ->
       cohort(State,Action,Coord,C_ref);
     {From,{Coord,can_commit}} ->
@@ -87,7 +86,7 @@ cohort(State,Action,C,C_ref) ->
               io:format("Cohort ~p: state is: Aborted ~n", [C_ref]),
               cohort(Newstate,Action,Coord,C_ref)
           end
-        %TODO: Keep stored trans if cohort dies
+        %TODO: revert if server coordinator is dead
         after 100 ->
           From ! {self(), {get_decision}},
           receive
